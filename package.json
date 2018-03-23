@@ -13,7 +13,10 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "nuxt": "^1.0.0"
+    "bulma": "^0.6.2",
+    "firebase": "^4.11.0",
+    "nuxt": "^1.4.0",
+    "vuexfire": "^2.3.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

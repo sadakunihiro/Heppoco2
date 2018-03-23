@@ -1,64 +1,51 @@
-<template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        heppoco2
-      </h1>
-      <h2 class="subtitle">
-        Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
+<template lang="html">
+  <div class="container">
+    <!-- <div id="add_button">
+      <button id="add-button" class="button is-primary" @click="isActive=true">追加</button>
+    </div> -->
+    <div  class="section">
+      <sample @activeInput="active_input"/>
+      <pos-input v-bind:class="{ 'is-active': isActive }" :item="item" @close="isActive=false"/>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
-import AppLogo from '~/components/AppLogo.vue'
+//import auth from '~/plugins/auth'
+import Sample from '~/components/Sample.vue'
+import PosInput from '~/components/PosInput.vue'
 
 export default {
   components: {
-    AppLogo
-  }
+    Sample,
+    PosInput,
+  },
+  data() {
+    return {
+      isActive: false,
+      item: {sp:"0.0",ep:"0.0",sl:"0.0",ts:true,type:'L',vol:"10"},
+    }
+  },
+  created() {
+    const user = process.env.USERNAME;
+    const pass = process.env.PASSWORD;
+    this.$store.dispatch('INIT_AUTH', {user: user, pass: pass})
+    this.$store.dispatch('INIT_ITEMS')
+  },
+  methods: {
+    active_input(item) {
+      this.item = item? item:{sp:"0.0",ep:"0.0",sl:"0.0",ts:true,type:'L',vol:"10"}
+      this.isActive = true
+      console.log('click', item)
+    }
+  },
 }
 </script>
 
 <style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+#add-button {
+  position: absolute;
+  top: 32px;
+  left: 15px;
 }
 </style>
