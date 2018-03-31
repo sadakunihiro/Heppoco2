@@ -11,22 +11,14 @@ Vue.use(Vuex)
 const store = () => new Vuex.Store({
     state: {
       items: [],
-      user: null
-    },
-    mutations: {
-      ...firebaseMutations
     },
     getters: {
-      items: state => {
-        return state.items
-      },
+      getItemByKey: state => key => {
+        return JSON.parse(JSON.stringify(state.items.find(item => item['.key'] === key))) // need deep copy
+      }
     },
+    mutations: firebaseMutations,
     actions: {
-      INIT_ITEMS: firebaseAction(({bindFirebaseRef, state}) => {
-        bindFirebaseRef('items', ref, {
-          errorCallback: (error) => console.log('INIT_ITEMS: ', error.message)
-        })
-      }),
       INIT_AUTH: (context, arg) => {
         if (!firebase.auth().currentUser) {
           firebase.auth().signInWithEmailAndPassword(arg.user, arg.pass)
@@ -35,9 +27,14 @@ const store = () => new Vuex.Store({
           })
           .catch(error => {
             console.log('signIn: ', error.message)
-          })
+         })
         }
       },
+      INIT_ITEMS: firebaseAction(({bindFirebaseRef, state}) => {
+        bindFirebaseRef('items', ref, {
+          errorCallback: (error) => console.log('INIT_ITEMS: ', error.message)
+        })
+      }),
       ADD_RECORD: firebaseAction((context, {key,item}) => {
         ref.push(item)
       }),

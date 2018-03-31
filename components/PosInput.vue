@@ -1,10 +1,10 @@
 <template lang="html">
-    <div class="modal" >
-      <div class="modal-background" @click="$emit('close')"></div>
+    <div class="modal" v-bind:class="{ 'is-active': isActive }">
+      <div class="modal-background" @click="isActive=false"></div>
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Input Rule</p>
-          <button class="delete" aria-label="close" @click="$emit('close')"></button>
+          <button class="delete" aria-label="close" @click="isActive=false"></button>
         </header>
         <section class="modal-card-body">
 
@@ -60,31 +60,54 @@
         </section>
         <footer class="modal-card-foot">
           <button class="button is-success" @click="save">Save</button>
-          <button class="button" @click="$emit('close')">Cancel</button>
+          <button class="button" @click="isActive=false">Cancel</button>
         </footer>
       </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import eventHub from '~/plugins/event-hub'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "PosInput",
-  props: ['item'],
+  data() {
+    return {
+      item: this.get_item(null),
+      isActive: false
+    }
+  },
+  computed: mapGetters(['getItemByKey']),
   methods: {
+    get_item(key) {
+      if (key) {
+        return this.getItemByKey(key)
+      } else {
+        return { '.key':null,sp:'',ep:'',sl:'',ts:true,type:'L',vol:''}
+      }
+    },
     async save() {
       const key = this.item['.key']
       delete this.item['.key']
       await this.$store.dispatch(key? 'MOD_RECORD':'ADD_RECORD', {key:key, item:this.item})
-      this.$emit('close')
+      this.isActive = false;
     }
+  },
+  created() {
+    eventHub.$on('activeInput', key => {
+      this.item = this.get_item(key)
+      this.isActive = true;
+    })
   }
 };
 </script>
 
 <style>
 .card {
-  width: 50%
+  width: 50%;
+}
+.modal-background {
+  background-color: rgba(34, 32, 32, 0.5);
 }
 </style>
