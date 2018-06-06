@@ -84,7 +84,7 @@ export default {
       if (key) {
         return this.getItemByKey(key)
       } else {
-        return { '.key':null,sp:'',ep:'',sl:'',ts:true,type:'L',vol:''}
+        return { '.key':null,sp:'',ep:'',sl:'',ts:true,type:'L',vol:'',state:'NEW'} // state: NEW | USE | DONE
       }
     },
     async save() {
@@ -99,6 +99,10 @@ export default {
       this.item = this.get_item(key)
       this.isActive = true;
     })
+  },
+  validate({params}) {
+    console.log('validate...')
+    return /^\d+$/.test(params.item.vol)
   }
 };
 </script>
