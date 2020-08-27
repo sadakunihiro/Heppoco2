@@ -1,4 +1,4 @@
-# heppoco2
+# NUXT-CRUD-SAMPLE
 
 > Nuxt.js project
 
