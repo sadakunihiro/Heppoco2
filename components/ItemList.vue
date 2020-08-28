@@ -1,4 +1,5 @@
 // components/ItenList.vue
+
 <template lang="html">
   <div class="box">
     <table class="table is-narrow is-hoverable is-fullwidth">
