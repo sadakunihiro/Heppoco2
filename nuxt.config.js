@@ -2,7 +2,7 @@ const webpack = require('webpack')
 
 module.exports = {
   /*
-  ** Headers of the page
+  ** Headers of the page   aaa
   */
   head: {
     title: 'heppoco2',
